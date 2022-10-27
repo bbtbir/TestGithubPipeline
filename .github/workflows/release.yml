@@ -1,18 +1,10 @@
 # This workflow will build a .NET project
 
-name: CI
+name: Release
 
 on:
-  push:
-    branches:
-      - main
-      - develop
-      - "feature/**"
-      - "release/**"
-      - "hotfix/**"
-    tags:
-      - "*"
-  pull_request:
+  release:
+    types: [published]
 
 defaults:
   run:
@@ -62,25 +54,4 @@ jobs:
         uses: NuGet/setup-nuget@v1
 
       - name: Publish NuGet
-        if: startsWith(github.ref, 'refs/heads/Release')
         run: nuget push **\*.nupkg -Source 'https://api.nuget.org/v3/index.json' -ApiKey ${{secrets.NUGETORGAPI}}
-
-      # - name: Code Coverage Report
-      #   uses: irongut/CodeCoverageSummary@v1.3.0
-      #   with:
-      #     filename: coverage/**/coverage.cobertura.xml
-      #     badge: true
-      #     fail_below_min: true
-      #     format: markdown
-      #     hide_branch_rate: false
-      #     hide_complexity: true
-      #     indicators: true
-      #     output: both
-      #     thresholds: "60 80"
-
-      # - name: Add Coverage PR Comment
-      #   uses: marocchino/sticky-pull-request-comment@v2
-      #   if: github.event_name == 'pull_request'
-      #   with:
-      #     recreate: true
-      #     path: code-coverage-results.md
